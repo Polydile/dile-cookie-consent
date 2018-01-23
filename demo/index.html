@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>dile-cookie-consent demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../dile-cookie-consent.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        dile-cookie-consent {
+          --dile-cookie-consent-background-color: #e5b4b4;
+        }
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic dile-cookie-consent demo</h3>
+      <demo-snippet>
+        <template>
+
+          <dile-cookie-consent
+            text ='Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam temporibus reiciendis delectus, corrupti iure inventore? Adipisci ex commodi perspiciatis accusamus nihil tempore est eum soluta quasi optio sequi, rem consequatur? Iste aspernatur facilis dignissimos voluptas! Ipsam, obcaecati! Ea delectus laboriosam quam asperiores quod necessitatibus dignissimos magni eius commodi consequuntur, at in saepe aut fugit atque odio soluta nesciunt nemo eligendi beatae voluptate modi. Itaque possimus facere ratione mollitia optio dolor aperiam perferendis sequi exercitationem tempora expedita delectus, voluptas fugit nemo voluptatum, dignissimos eius laborum voluptatibus est, veniam vel? Dolores eos soluta delectus dicta recusandae placeat laborum? Alias vero consectetur non.'
+            label-button='Ok'
+            role="danger"
+            position="bottom"
+          ></dile-cookie-consent>
+
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+
+</html>

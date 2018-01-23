@@ -1,0 +1,250 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="./bower_components/dile-button/dile-button.html">
+
+
+<dom-module id="dile-cookie-consent">
+
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #consentlayout {
+        padding: 10px 10px 10px 10px;
+        position: fixed;
+        left: 0px;
+        right: 0px;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: var(--dile-cookie-consent-background-color, gray);
+        color: var(--dile-cookie-consent-color, white);
+
+        animation-duration: 0.5s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+        -webkit-animation-name: animIn;
+        animation-name: animIn;
+
+      }
+
+      @keyframes animIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .top {
+        top: 0px !important;
+      }
+
+      .bottom {
+        bottom: 0px !important;
+      }
+
+      span {
+        float: left;
+        width: 95%;
+      }
+
+      dile-button {
+        float: right;
+        margin-right: 20px;
+        vertical-align: middle;
+      }
+
+      .undefined {
+        color: #868e96;
+      }
+      .primary {
+        color: #007bff
+      }
+      .danger {
+        color: #dc3545
+      }
+      .success {
+        color: #28a745
+      }
+      .warning {
+        color: #ffc107
+      }
+
+    </style>
+
+    <template is="dom-if" if="[[visible]]">
+
+      <div id="consentlayout" class$="[[position]]">
+
+        <span class$="[[role]]">[[text]]</span>
+
+        <dile-button
+          label="[[labelButton]]"
+          role="[[role]]"
+          on-click="_accept"
+        ></dile-button>
+
+      </div>
+
+    </template>
+
+  </template>
+
+  <script>
+    /**
+    * # \<dile-cookie-consent\>
+
+    * Polymer Web Component to implement a cookie consent.
+
+    * This components accepts a "role" property to styling.
+
+    * When you click on the button create a cookie in navigator.
+    * If cookie is created, the component is not visible, in other case is visible.
+
+    * ```html
+    *  <dile-cookie-consent
+    *   text =' ... '
+    *   label-button='Ok'
+    *   role="primary"
+    *   position="bottom"
+    *   name-cookie="dile"
+    *   days-expiration-cookie=365
+    *  ></dile-cookie-consent>
+    * ```
+    *
+    * Property | Description | Default
+    * ---------|-------------|---------
+    * text | Text of consent. | {}
+    * label-button | Label of button | Ok
+    * role | undefined, primary, danger, success, warning | danger
+    * position | 'top' => Top of screen, 'bottom' => Bottom of screen | bottom
+    * name-cookie | Cookie's name | dile
+    * days-expiration-cookie | Number of days expiration of cookie
+    *
+    * Custom property | Description | Default
+    * ----------------|-------------|---------
+    * --dile-cookie-consent-background-color | Background color | gray
+    */
+    class DileCookieConsent extends Polymer.Element {
+
+      static get is() { return 'dile-cookie-consent'; }
+
+      static get properties() {
+        return {
+
+          /**
+          * Text displayed in consent.
+          * @type {String}
+          */
+          text: {
+            type: String,
+            value: ''
+          },
+
+          /**
+          * Text displayed in button.
+          * @type {String}
+          */
+          labelButton: {
+            type: String,
+            value: 'Ok'
+          },
+
+          /**
+          * Name of stored cookie.
+          * @type {String}
+          */
+          nameCookie: {
+            type: String,
+            value: 'dile'
+          },
+
+          /**
+          * Days of validation of stored cookie.
+          * @type {Number}
+          */
+          daysExpirationCookie: {
+            type: Number,
+            value: 365
+          },
+
+          /**
+          * Visible or not depends of cookie.
+          * @type {Boolean}
+          */
+          visible: {
+            type: Boolean,
+            value: true
+          },
+
+          /**
+          * Role of component.
+          * Values accepted: 'undefined', 'primary', 'danger', 'warning', 'success'.
+          * @type {String}
+          */
+          role: {
+            type: String,
+            value: 'undefined'
+          },
+
+          /**
+          * Position component.
+          * Values accepted: 'top' -> Top of screen, 'bottom' -> Bottom of screen.
+          * @type {String}
+          */
+          position: {
+            type: String,
+            value: 'bottom'
+          },
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.visible = !this._checkCookie();
+      }
+
+      _accept() {
+        this._setCookie(this.nameCookie, true, this.daysExpirationCookie);
+        this.visible = false;
+      };
+
+      _checkCookie() {
+        return this._getCookie(this.nameCookie) != "" && this._getCookie(this.nameCookie) != undefined ? true : false;
+      }
+
+       // Reference: https://www.w3schools.com/js/js_cookies.asp
+       _setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+
+      // Reference: https://www.w3schools.com/js/js_cookies.asp
+      _getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+
+    }
+
+    window.customElements.define(DileCookieConsent.is, DileCookieConsent);
+  </script>
+</dom-module>
